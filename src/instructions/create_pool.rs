@@ -1,25 +1,16 @@
-use crate::client_config::ClientConfig; 
-use solana_sdk::{
-    instruction::Instruction,
-    pubkey::Pubkey,
-    system_program,
-    sysvar,
-};
-use anyhow::Result;
-use solana_client::rpc_client::RpcClient;
-// import read_keypair_file
+use crate::client_config::ClientConfig;
 use crate::utils::read_keypair_file;
 use anchor_client::{Client, Cluster};
+use anyhow::Result;
+use solana_sdk::{instruction::Instruction, pubkey::Pubkey, system_program, sysvar};
 use std::rc::Rc;
 
-use raydium_amm_v3::states::{
-    AMM_CONFIG_SEED, OBSERVATION_SEED, OPERATION_SEED, POOL_SEED, POOL_VAULT_SEED, POSITION_SEED,
-    TICK_ARRAY_SEED,
-};
-use raydium_amm_v3::instruction as raydium_instruction;
-use raydium_amm_v3::accounts as raydium_accounts;
+use raydium_amm_v3::states::{OBSERVATION_SEED, POOL_SEED, POOL_VAULT_SEED};
 
-pub fn create_pool_instr(   
+use raydium_amm_v3::accounts as raydium_accounts;
+use raydium_amm_v3::instruction as raydium_instruction;
+
+pub fn create_pool_instr(
     config: &ClientConfig,
     amm_config: Pubkey,
     token_mint_0: Pubkey,

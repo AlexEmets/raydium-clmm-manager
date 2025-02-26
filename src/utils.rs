@@ -1,11 +1,9 @@
-use anyhow::{format_err, Result};
-use solana_sdk::signature::Keypair;
+use anyhow::{Result, format_err};
 use raydium_amm_v3::libraries::fixed_point_64;
 use solana_client::{rpc_client::RpcClient, rpc_config::RpcSendTransactionConfig};
+use solana_sdk::signature::Keypair;
 use solana_sdk::{
-    commitment_config::CommitmentConfig,
-    signature::Signature,
-    transaction::Transaction,
+    commitment_config::CommitmentConfig, signature::Signature, transaction::Transaction,
 };
 
 pub fn read_keypair_file(s: &str) -> Result<Keypair> {
@@ -19,7 +17,7 @@ pub fn price_to_sqrt_price_x64(price: f64, decimals_0: u8, decimals_1: u8) -> u1
 }
 
 pub fn multipler(decimals: u8) -> f64 {
-    (10_i32).checked_pow(decimals.try_into().unwrap()).unwrap() as f64
+    (10_i32).checked_pow(decimals.into()).unwrap() as f64
 }
 
 pub fn price_to_x64(price: f64) -> u128 {

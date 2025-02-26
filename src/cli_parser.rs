@@ -1,4 +1,4 @@
-use clap::{Parser, Subcommand};
+use clap::Parser;
 use solana_sdk::pubkey::Pubkey;
 /// Solana Liquidity Manager CLI
 #[derive(Parser, Debug)]
@@ -47,5 +47,4 @@ pub enum LiquidityCommand {
         #[arg(short, long)]
         pool: String,
     },
-    
 }

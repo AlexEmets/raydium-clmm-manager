@@ -1,12 +1,9 @@
-use solana_sdk::pubkey::Pubkey;
-use anyhow::{format_err, Result};
+use anyhow::Result;
 use configparser::ini::Ini;
+use solana_sdk::pubkey::Pubkey;
 use std::str::FromStr;
 
-use raydium_amm_v3::{
-    libraries::{fixed_point_64, liquidity_math, tick_math},
-    states::{PoolState, TickArrayBitmapExtension, TickArrayState, POOL_TICK_ARRAY_BITMAP_SEED},
-};
+use raydium_amm_v3::states::POOL_TICK_ARRAY_BITMAP_SEED;
 
 #[derive(Clone, Debug, PartialEq)]
 pub struct ClientConfig {
@@ -24,7 +21,6 @@ pub struct ClientConfig {
     pub tickarray_bitmap_extension: Option<Pubkey>,
     pub amm_config_index: u16,
 }
-
 
 pub fn load_cfg(client_config: &String) -> Result<ClientConfig> {
     let mut config = Ini::new();
@@ -73,12 +69,8 @@ pub fn load_cfg(client_config: &String) -> Result<ClientConfig> {
         &raydium_v3_program,
     );
 
-    let pool_id_account = if mint0 != None && mint1 != None {
-        if mint0.unwrap() > mint1.unwrap() {
-            let temp_mint = mint0;
-            mint0 = mint1;
-            mint1 = temp_mint;
-        }
+    let pool_id_account = if mint0.is_some() && mint1.is_some() {
+        std::mem::swap(&mut mint0, &mut mint1);
         Some(
             Pubkey::find_program_address(
                 &[
@@ -94,7 +86,7 @@ pub fn load_cfg(client_config: &String) -> Result<ClientConfig> {
     } else {
         None
     };
-    let tickarray_bitmap_extension = if pool_id_account != None {
+    let tickarray_bitmap_extension = if pool_id_account.is_some() {
         Some(
             Pubkey::find_program_address(
                 &[
@@ -124,5 +116,3 @@ pub fn load_cfg(client_config: &String) -> Result<ClientConfig> {
         amm_config_index,
     })
 }
-
-
